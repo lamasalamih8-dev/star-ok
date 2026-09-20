@@ -49,7 +49,114 @@ app.post("/api/admin/products",auth,upload.single("image"),(req,res)=>{let {name
 app.put("/api/admin/products/:id",auth,upload.single("image"),(req,res)=>{let p=db.prepare("SELECT * FROM products WHERE id=?").get(req.params.id);if(!p)return res.sendStatus(404);let image=req.file?"/uploads/"+req.file.filename:p.image;let {name,game,price,stock,description,active}=req.body;db.prepare("UPDATE products SET name=?,game=?,price=?,stock=?,description=?,active=?,image=? WHERE id=?").run(name,game,Number(price),Number(stock||0),description||"",active===undefined?p.active:Number(active),image,p.id);res.json({ok:true})});
 app.delete("/api/admin/products/:id",auth,(req,res)=>{db.prepare("DELETE FROM products WHERE id=?").run(req.params.id);res.json({ok:true})});
 app.post("/api/orders",(req,res)=>{let {customer_name,contact,player_id,product_id}=req.body;let p=db.prepare("SELECT * FROM products WHERE id=? AND active=1").get(product_id);if(!p)return res.status(400).json({error:"المنتج غير موجود"});if(p.stock<1)return res.status(400).json({error:"المنتج غير متوفر"});let info=db.prepare("INSERT INTO orders(customer_name,contact,player_id,product_id,product_name,price) VALUES(?,?,?,?,?,?)").run(customer_name,contact,player_id,p.id,p.name,p.price);db.prepare("UPDATE products SET stock=stock-1 WHERE id=?").run(p.id);res.json({id:info.lastInsertRowid})});
-app.get("/api/admin/orders",auth,(req,res)=>res.json(db.prepare("SELECT * FROM orders ORDER BY id DESC").all()));
+app.get("/api/admin/orders",auth,(req,res)=>res.json(db.prepare("SELECT * FROM orders ORDER BY id DESC").all()));app.post("/api/deposits",(req,res)=>{
+  const {customer_name,contact,amount,transaction_number}=req.body;
+
+  if(!customer_name || !contact || !amount || !transaction_number){
+    return res.status(400).json({error:"جميع بيانات الإيداع مطلوبة"});
+  }
+
+  const value=Number(amount);
+
+  if(!Number.isFinite(value) || value<=0){
+    return res.status(400).json({error:"المبلغ غير صالح"});
+  }
+
+  let customer=db.prepare("SELECT * FROM customers WHERE contact=?").get(contact);
+
+  if(!customer){
+    const info=db.prepare(
+      "INSERT INTO customers(name,contact,balance) VALUES(?,?,0)"
+    ).run(customer_name,contact);
+
+    customer=db.prepare("SELECT * FROM customers WHERE id=?")
+      .get(info.lastInsertRowid);
+  }
+
+  const info=db.prepare(`
+    INSERT INTO deposits
+    (customer_id,customer_name,contact,amount,method,transaction_number,status)
+    VALUES(?,?,?,?,?,?,?)
+  `).run(
+    customer.id,
+    customer_name,
+    contact,
+    value,
+    "Sham Cash",
+    transaction_number,
+    "pending"
+  );
+
+  res.json({
+    ok:true,
+    id:info.lastInsertRowid,
+    message:"تم إرسال طلب الإيداع بنجاح"
+  });
+});
+
+app.get("/api/admin/deposits",auth,(req,res)=>{
+  res.json(
+    db.prepare("SELECT * FROM deposits ORDER BY id DESC").all()
+  );
+});
+
+app.patch("/api/admin/deposits/:id",auth,(req,res)=>{
+  const deposit=db.prepare(
+    "SELECT * FROM deposits WHERE id=?"
+  ).get(req.params.id);
+
+  if(!deposit){
+    return res.status(404).json({error:"طلب الإيداع غير موجود"});
+  }
+
+  const status=req.body.status;
+
+  if(!["approved","rejected"].includes(status)){
+    return res.status(400).json({error:"حالة غير صالحة"});
+  }
+
+  if(deposit.status!=="pending"){
+    return res.status(400).json({error:"تمت معالجة هذا الطلب مسبقاً"});
+  }
+
+  const update=db.transaction(()=>{
+    db.prepare(
+      "UPDATE deposits SET status=? WHERE id=?"
+    ).run(status,deposit.id);
+
+    if(status==="approved"){
+      db.prepare(
+        "UPDATE customers SET balance=balance+? WHERE id=?"
+      ).run(deposit.amount,deposit.customer_id);
+    }
+  });
+
+  update();
+
+  res.json({ok:true});
+});
+
+app.get("/api/customer/balance",(req,res)=>{
+  const contact=req.query.contact;
+
+  if(!contact){
+    return res.status(400).json({error:"رقم التواصل مطلوب"});
+  }
+
+  const customer=db.prepare(
+    "SELECT id,name,contact,balance FROM customers WHERE contact=?"
+  ).get(contact);
+
+  if(!customer){
+    return res.json({
+      name:"",
+      contact,
+      balance:0
+    });
+  }
+
+  res.json(customer);
+});
 app.patch("/api/admin/orders/:id",auth,(req,res)=>{db.prepare("UPDATE orders SET status=? WHERE id=?").run(req.body.status,req.params.id);res.json({ok:true})});
 app.get("/api/admin/stats",auth,(req,res)=>res.json({products:db.prepare("SELECT COUNT(*) n FROM products").get().n,orders:db.prepare("SELECT COUNT(*) n FROM orders").get().n,sales:db.prepare("SELECT COALESCE(SUM(price),0) n FROM orders").get().n}));
 app.post("/api/login",(req,res)=>{let {email,password}=req.body;let hash=crypto.createHash("sha256").update(password||"").digest("hex");let a=db.prepare("SELECT * FROM admins WHERE email=? AND password_hash=?").get(email,hash);if(!a)return res.status(401).json({error:"بيانات الدخول غير صحيحة"});let token=process.env.ADMIN_TOKEN||crypto.createHash("sha256").update(ADMIN_EMAIL+ADMIN_PASSWORD).digest("hex");res.json({token})});
