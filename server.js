@@ -3,7 +3,28 @@ const app=express(), PORT=process.env.PORT||3000;
 const dataDir=path.join(__dirname,"data"), uploadDir=path.join(__dirname,"public","uploads");
 fs.mkdirSync(dataDir,{recursive:true}); fs.mkdirSync(uploadDir,{recursive:true});
 const db=new Database(path.join(dataDir,"starok.db"));
-db.exec(`CREATE TABLE IF NOT EXISTS admins(id INTEGER PRIMARY KEY AUTOINCREMENT,email TEXT UNIQUE NOT NULL,password_hash TEXT NOT NULL,created_at TEXT DEFAULT CURRENT_TIMESTAMP);
+db.execdb.exec(`
+CREATE TABLE IF NOT EXISTS customers(
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name TEXT,
+  contact TEXT UNIQUE,
+  balance REAL DEFAULT 0,
+  created_at TEXT DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS deposits(
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  customer_id INTEGER,
+  customer_name TEXT,
+  contact TEXT,
+  amount REAL NOT NULL,
+  method TEXT DEFAULT 'Sham Cash',
+  transaction_number TEXT,
+  status TEXT DEFAULT 'pending',
+  created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY(customer_id) REFERENCES customers(id)
+);
+`);(`CREATE TABLE IF NOT EXISTS admins(id INTEGER PRIMARY KEY AUTOINCREMENT,email TEXT UNIQUE NOT NULL,password_hash TEXT NOT NULL,created_at TEXT DEFAULT CURRENT_TIMESTAMP);
 CREATE TABLE IF NOT EXISTS products(id INTEGER PRIMARY KEY AUTOINCREMENT,name TEXT NOT NULL,game TEXT NOT NULL,price REAL NOT NULL,stock INTEGER DEFAULT 0,image TEXT,description TEXT DEFAULT '',active INTEGER DEFAULT 1,created_at TEXT DEFAULT CURRENT_TIMESTAMP);
 CREATE TABLE IF NOT EXISTS orders(id INTEGER PRIMARY KEY AUTOINCREMENT,customer_name TEXT,contact TEXT,player_id TEXT,product_id INTEGER,product_name TEXT,price REAL,status TEXT DEFAULT 'new',created_at TEXT DEFAULT CURRENT_TIMESTAMP);`);
 if(!db.prepare("SELECT 1 FROM products LIMIT 1").get()) db.prepare("INSERT INTO products(name,game,price,stock,description) VALUES(?,?,?,?,?)").run("مثال: 60 UC","PUBG Mobile",1,100,"احذف هذا المنتج وأضف منتجاتك من لوحة الإدارة.");
