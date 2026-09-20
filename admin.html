@@ -1,6 +1,6 @@
 doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>STAR OK Admin</title><style>
 *{box-sizing:border-box}body{margin:0;background:#070912;color:#fff;font-family:Arial,Tahoma}.side{position:fixed;right:0;top:0;bottom:0;width:235px;background:#0b0f18;border-left:1px solid #232a3c;padding:22px}.logo{font-size:23px;font-weight:900;margin-bottom:30px}.logo span{display:inline-grid;place-items:center;width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,#7c3aed,#ec4899);margin-left:7px}.nav button{display:block;width:100%;text-align:right;padding:13px;margin:5px 0;background:transparent;border:0;color:#8d95a9;border-radius:10px}.nav button.active,.nav button:hover{background:#8b5cf61c;color:white}.main{margin-right:235px;padding:28px}.top{display:flex;justify-content:space-between;align-items:center}.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:22px 0}.card,.panel{background:#101521;border:1px solid #232a3c;border-radius:16px;padding:18px}.num{font-size:27px;font-weight:900;margin-top:8px}table{width:100%;border-collapse:collapse}th,td{text-align:right;padding:13px 8px;border-bottom:1px solid #232a3c;font-size:12px}th{color:#737c91}.btn{padding:11px 15px;border-radius:10px;background:#111827;color:#fff;border:1px solid #293149;cursor:pointer}.primary{background:linear-gradient(135deg,#7c3aed,#db2777);border:0}.modal{display:none;position:fixed;inset:0;background:#000b;place-items:center;z-index:4}.modal.show{display:grid}.box{width:min(560px,92%);background:#101521;border:1px solid #293149;border-radius:18px;padding:22px}.box input,.box textarea{width:100%;margin:6px 0;padding:11px;background:#080b12;color:#fff;border:1px solid #293149;border-radius:9px}.row{display:grid;grid-template-columns:1fr 1fr;gap:8px}.actions{display:flex;gap:8px;margin-top:12px}.status{padding:5px 8px;border-radius:20px;background:#31d39b1a;color:#54dfc0}@media(max-width:800px){.side{width:65px;padding:15px 7px}.logo{font-size:0}.nav button{font-size:0;text-align:center}.nav button:first-letter{font-size:18px}.main{margin-right:65px}.cards{grid-template-columns:1fr 1fr}}@media(max-width:500px){.cards{grid-template-columns:1fr}.row{grid-template-columns:1fr}}
-</style></head><body><div id="login" style="position:fixed;inset:0;background:#070912;display:grid;place-items:center;z-index:20"><div class="box" style="width:min(420px,92%)"><h1>STAR OK</h1><p style="color:#8d95a9">تسجيل دخول الإدارة</p><input id="le" placeholder="البريد الإلكتروني"><input id="lp" type="password" placeholder="كلمة المرور"><button class="btn primary" style="width:100%;margin-top:8px" onclick="login()">دخول</button></div></div><aside class="side"><div class="logo"><span>★</span> STAR OK</div><nav class="nav"><button class="active">◈ لوحة التحكم</button><button onclick="document.getElementById('productPanel').scrollIntoView()">▣ المنتجات</button><button onclick="document.getElementById('orderPanel').scrollIntoView()">◷ الطلبات</button><button onclick="document.getElementById('depositPanel').scrollIntoView()">💰 الإيداعات</button><button onclick="location.href='/'">↗ المتجر</button></nav></aside><main class="main"><div class="top"><div><h1>لوحة إدارة STAR OK</h1><p style="color:#858da2">أنت تتحكم بالمنتجات والأسعار والطلبات من هنا</p></div><button class="btn primary" onclick="openM()">+ إضافة منتج</button></div><div class="cards"><div class="card">المنتجات<div class="num" id="pc">0</div></div><div class="card">الطلبات<div class="num" id="oc">0</div></div><div class="card">المبيعات<div class="num" id="sc">$0</div></div></div><section class="panel" id="productPanel"><h2>منتجات المتجر</h2><table><thead><tr><th>المنتج</th><th>اللعبة</th><th>السعر</th><th>المخزون</th><th>إجراء</th></tr></thead><tbody id="pt"></tbody></table></section><section class="panel" id="orderPanel" style="margin-top:18px"><h2>الطلبات</h2><table><thead><tr><th>رقم</th><th>العميل</th><th>ID اللاعب</th><th>المنتج</th><th>السعر</th><th>الحالة</th></tr></thead><tbody id="ot"></tbody></table></section><<section class="panel" id="depositPanel" style="margin-top:18px">
+</style></head><body><div id="login" style="position:fixed;inset:0;background:#070912;display:grid;place-items:center;z-index:20"><div class="box" style="width:min(420px,92%)"><h1>STAR OK</h1><p style="color:#8d95a9">تسجيل دخول الإدارة</p><input id="le" placeholder="البريد الإلكتروني"><input id="lp" type="password" placeholder="كلمة المرور"><button class="btn primary" style="width:100%;margin-top:8px" onclick="login()">دخول</button></div></div><aside class="side"><div class="logo"><span>★</span> STAR OK</div><nav class="nav"><button class="active">◈ لوحة التحكم</button><button onclick="document.getElementById('productPanel').scrollIntoView()">▣ المنتجات</button><button onclick="document.getElementById('orderPanel').scrollIntoView()">◷ الطلبات</button><button onclick="document.getElementById('depositPanel').scrollIntoView()">💰 الإيداعات</button><button onclick="location.href='/'">↗ المتجر</button></nav></aside><main class="main"><div class="top"><div><h1>لوحة إدارة STAR OK</h1><p style="color:#858da2">أنت تتحكم بالمنتجات والأسعار والطلبات من هنا</p></div><button class="btn primary" onclick="openM()">+ إضافة منتج</button></div><div class="cards"><div class="card">المنتجات<div class="num" id="pc">0</div></div><div class="card">الطلبات<div class="num" id="oc">0</div></div><div class="card">المبيعات<div class="num" id="sc">$0</div></div></div><section class="panel" id="productPanel"><h2>منتجات المتجر</h2><table><thead><tr><th>المنتج</th><th>اللعبة</th><th>السعر</th><th>المخزون</th><th>إجراء</th></tr></thead><tbody id="pt"></tbody></table></section><section class="panel" id="orderPanel" style="margin-top:18px"><h2>الطلبات</h2><table><thead><tr><th>رقم</th><th>العميل</th><th>ID اللاعب</th><th>المنتج</th><th>السعر</th><th>الحالة</th></tr></thead><tbody id="ot"></tbody></table></section><<section class="panel" </section><section class="panel" id="depositPanel" style="margin-top:18px">
   <h2>💰 طلبات الإيداع - شام كاش</h2>
 
   <table>
@@ -18,25 +18,73 @@ doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="v
 
     <tbody id="dt"></tbody>
   </table>
-</section>/main>
+</section></main>
 <div class="modal" id="modal"><div class="box"><h2>إضافة منتج جديد</h2><form id="form"><input name="name" placeholder="اسم المنتج" required><div class="row"><input name="game" placeholder="اللعبة" required><input name="price" type="number" step=".01" placeholder="السعر" required></div><div class="row"><input name="stock" type="number" placeholder="المخزون"><input name="image" type="file" accept="image/*"></div><textarea name="description" placeholder="وصف المنتج"></textarea><div class="actions"><button class="btn primary">حفظ المنتج</button><button type="button" class="btn" onclick="closeM()">إلغاء</button></div></form></div></div>
-<script>
-let token=localStorage.starok_token||"";
-async function login(){let r=await fetch("/api/login",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email:le.value,password:lp.value})}),j=await r.json();if(!r.ok)return alert(j.error);localStorage.starok_token=j.token;token=j.token;document.getElementById("login").style.display="none";load()}
-if(!token){document.querySelector(".main").style.display="none"}else document.getElementById("login").style.display="none";
-const A=async function load(){
+<script>let token=localStorage.starok_token||"";
+
+async function login(){
+  let r=await fetch("/api/login",{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({
+      email:document.getElementById("le").value,
+      password:document.getElementById("lp").value
+    })
+  });
+
+  let j=await r.json();
+
+  if(!r.ok) return alert(j.error || "خطأ في تسجيل الدخول");
+
+  localStorage.starok_token=j.token;
+  token=j.token;
+
+  document.getElementById("login").style.display="none";
+  document.querySelector(".main").style.display="block";
+
+  load();
+}
+
+if(!token){
+  document.querySelector(".main").style.display="none";
+}else{
+  document.getElementById("login").style.display="none";
+}
+
+const A=async(u,o={})=>{
+  return fetch(u,{
+    ...o,
+    headers:{
+      ...(o.headers||{}),
+      Authorization:"Bearer "+token
+    }
+  });
+};
+
+const modal=document.getElementById("modal");
+
+function openM(){
+  modal.classList.add("show");
+}
+
+function closeM(){
+  modal.classList.remove("show");
+}
+
+async function load(){
+
   let [p,o,s,d]=await Promise.all([
-    A('/api/admin/products').then(x=>x.json()),
-    A('/api/admin/orders').then(x=>x.json()),
-    A('/api/admin/stats').then(x=>x.json()),
-    A('/api/admin/deposits').then(x=>x.json())
+    A("/api/admin/products").then(x=>x.json()),
+    A("/api/admin/orders").then(x=>x.json()),
+    A("/api/admin/stats").then(x=>x.json()),
+    A("/api/admin/deposits").then(x=>x.json())
   ]);
 
-  pc.textContent=s.products;
-  oc.textContent=s.orders;
-  sc.textContent='$'+Number(s.sales).toFixed(2);
+  document.getElementById("pc").textContent=s.products;
+  document.getElementById("oc").textContent=s.orders;
+  document.getElementById("sc").textContent="$"+Number(s.sales).toFixed(2);
 
-  pt.innerHTML=p.map(x=>`
+  document.getElementById("pt").innerHTML=p.map(x=>`
     <tr>
       <td>${x.name}</td>
       <td>${x.game}</td>
@@ -46,9 +94,9 @@ const A=async function load(){
         <button class="btn" onclick="del(${x.id})">حذف</button>
       </td>
     </tr>
-  `).join('');
+  `).join("");
 
-  ot.innerHTML=o.map(x=>`
+  document.getElementById("ot").innerHTML=o.map(x=>`
     <tr>
       <td>#SO-${x.id}</td>
       <td>${x.customer_name}<br><small>${x.contact}</small></td>
@@ -60,49 +108,56 @@ const A=async function load(){
           onchange="status(${x.id},this.value)"
           style="background:#0b0f18;color:#fff;border:1px solid #293149;padding:6px"
         >
-          <option value="new" ${x.status==='new'?'selected':''}>جديد</option>
-          <option value="processing" ${x.status==='processing'?'selected':''}>قيد التنفيذ</option>
-          <option value="done" ${x.status==='done'?'selected':''}>مكتمل</option>
+          <option value="new" ${x.status==="new"?"selected":""}>جديد</option>
+          <option value="processing" ${x.status==="processing"?"selected":""}>قيد التنفيذ</option>
+          <option value="done" ${x.status==="done"?"selected":""}>مكتمل</option>
         </select>
       </td>
     </tr>
-  `).join('');
+  `).join("");
 
-  dt.innerHTML=d.map(x=>`
+  document.getElementById("dt").innerHTML=d.map(x=>`
     <tr>
       <td>#DEP-${x.id}</td>
       <td>${x.customer_name}<br><small>${x.contact}</small></td>
       <td><b>$${Number(x.amount).toFixed(2)}</b></td>
       <td>${x.transaction_number}</td>
       <td>${x.method}</td>
-      <td>${
-        x.status==='pending'
-        ? '<span style="color:#fbbf24">قيد المراجعة</span>'
-        : x.status==='approved'
-        ? '<span style="color:#54dfc0">تم القبول</span>'
-        : '<span style="color:#f87171">مرفوض</span>'
-      }</td>
-      <td>${
-        x.status==='pending'
-        ? `
-          <button class="btn primary" onclick="depositStatus(${x.id},'approved')">قبول</button>
-          <button class="btn" onclick="depositStatus(${x.id},'rejected')">رفض</button>
-        `
-        : '-'
-      }</td>
+      <td>
+        ${
+          x.status==="pending"
+          ? '<span style="color:#fbbf24">قيد المراجعة</span>'
+          : x.status==="approved"
+          ? '<span style="color:#54dfc0">تم القبول</span>'
+          : '<span style="color:#f87171">مرفوض</span>'
+        }
+      </td>
+      <td>
+        ${
+          x.status==="pending"
+          ? `
+            <button class="btn primary" onclick="depositStatus(${x.id},'approved')">قبول</button>
+            <button class="btn" onclick="depositStatus(${x.id},'rejected')">رفض</button>
+          `
+          : "-"
+        }
+      </td>
     </tr>
-  `).join('');
- async function depositStatus(id,statusValue){
-  const message=statusValue==='approved'
-    ? 'هل تريد قبول الإيداع وإضافة المبلغ إلى رصيد الزبون؟'
-    : 'هل تريد رفض طلب الإيداع؟';
+  `).join("");
+}
+
+async function depositStatus(id,statusValue){
+
+  const message=statusValue==="approved"
+    ? "هل تريد قبول الإيداع وإضافة المبلغ إلى رصيد الزبون؟"
+    : "هل تريد رفض طلب الإيداع؟";
 
   if(!confirm(message)) return;
 
-  const r=await A('/api/admin/deposits/'+id,{
-    method:'PATCH',
+  const r=await A("/api/admin/deposits/"+id,{
+    method:"PATCH",
     headers:{
-      'Content-Type':'application/json'
+      "Content-Type":"application/json"
     },
     body:JSON.stringify({
       status:statusValue
@@ -112,15 +167,69 @@ const A=async function load(){
   const j=await r.json();
 
   if(!r.ok){
-    return alert(j.error || 'حدث خطأ');
+    return alert(j.error || "حدث خطأ");
   }
 
-  alert(statusValue==='approved'
-    ? 'تم قبول الإيداع وإضافة الرصيد.'
-    : 'تم رفض الإيداع.'
+  alert(
+    statusValue==="approved"
+    ? "تم قبول الإيداع وإضافة الرصيد."
+    : "تم رفض الإيداع."
   );
 
   load();
- } } load(){let [p,o,s]=await Promise.all([A('/api/admin/products').then(x=>x.json()),A('/api/admin/orders').then(x=>x.json()),A('/api/admin/stats').then(x=>x.json())]);pc.textContent=s.products;oc.textContent=s.orders;sc.textContent='$'+Number(s.sales).toFixed(2);pt.innerHTML=p.map(x=>`<tr><td>${x.name}</td><td>${x.game}</td><td>$${Number(x.price).toFixed(2)}</td><td>${x.stock}</td><td><button class="btn" onclick="del(${x.id})">حذف</button></td></tr>`).join('');ot.innerHTML=o.map(x=>`<tr><td>#SO-${x.id}</td><td>${x.customer_name}<br><small>${x.contact}</small></td><td>${x.player_id}</td><td>${x.product_name}</td><td>$${Number(x.price).toFixed(2)}</td><td><select onchange="status(${x.id},this.value)" style="background:#0b0f18;color:#fff;border:1px solid #293149;padding:6px"><option value="new" ${x.status==='new'?'selected':''}>جديد</option><option value="processing" ${x.status==='processing'?'selected':''}>قيد التنفيذ</option><option value="done" ${x.status==='done'?'selected':''}>مكتمل</option></select></td></tr>`).join('')}
-form.onsubmit=async e=>{e.preventDefault();let fd=new FormData(form);await A('/api/admin/products',{method:'POST',body:fd});form.reset();closeM();load()};async function del(id){if(confirm('حذف المنتج؟')){await A('/api/admin/products/'+id,{method:'DELETE'});load()}}async function status(id,v){await A('/api/admin/orders/'+id,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({status:v})})}load();
-</script></body></html>
+}
+
+document.getElementById("form").onsubmit=async e=>{
+
+  e.preventDefault();
+
+  let fd=new FormData(document.getElementById("form"));
+
+  let r=await A("/api/admin/products",{
+    method:"POST",
+    body:fd
+  });
+
+  if(!r.ok){
+    let j=await r.json().catch(()=>({}));
+    return alert(j.error || "حدث خطأ أثناء إضافة المنتج");
+  }
+
+  document.getElementById("form").reset();
+
+  closeM();
+
+  load();
+};
+
+async function del(id){
+
+  if(confirm("حذف المنتج؟")){
+
+    await A("/api/admin/products/"+id,{
+      method:"DELETE"
+    });
+
+    load();
+  }
+}
+
+async function status(id,v){
+
+  await A("/api/admin/orders/"+id,{
+    method:"PATCH",
+    headers:{
+      "Content-Type":"application/json"
+    },
+    body:JSON.stringify({
+      status:v
+    })
+  });
+
+  load();
+}
+
+load();
+</script>
+</body>
+</html>
