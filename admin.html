@@ -92,6 +92,35 @@ const A=async function load(){
       }</td>
     </tr>
   `).join('');
-  } load(){let [p,o,s]=await Promise.all([A('/api/admin/products').then(x=>x.json()),A('/api/admin/orders').then(x=>x.json()),A('/api/admin/stats').then(x=>x.json())]);pc.textContent=s.products;oc.textContent=s.orders;sc.textContent='$'+Number(s.sales).toFixed(2);pt.innerHTML=p.map(x=>`<tr><td>${x.name}</td><td>${x.game}</td><td>$${Number(x.price).toFixed(2)}</td><td>${x.stock}</td><td><button class="btn" onclick="del(${x.id})">حذف</button></td></tr>`).join('');ot.innerHTML=o.map(x=>`<tr><td>#SO-${x.id}</td><td>${x.customer_name}<br><small>${x.contact}</small></td><td>${x.player_id}</td><td>${x.product_name}</td><td>$${Number(x.price).toFixed(2)}</td><td><select onchange="status(${x.id},this.value)" style="background:#0b0f18;color:#fff;border:1px solid #293149;padding:6px"><option value="new" ${x.status==='new'?'selected':''}>جديد</option><option value="processing" ${x.status==='processing'?'selected':''}>قيد التنفيذ</option><option value="done" ${x.status==='done'?'selected':''}>مكتمل</option></select></td></tr>`).join('')}
+ async function depositStatus(id,statusValue){
+  const message=statusValue==='approved'
+    ? 'هل تريد قبول الإيداع وإضافة المبلغ إلى رصيد الزبون؟'
+    : 'هل تريد رفض طلب الإيداع؟';
+
+  if(!confirm(message)) return;
+
+  const r=await A('/api/admin/deposits/'+id,{
+    method:'PATCH',
+    headers:{
+      'Content-Type':'application/json'
+    },
+    body:JSON.stringify({
+      status:statusValue
+    })
+  });
+
+  const j=await r.json();
+
+  if(!r.ok){
+    return alert(j.error || 'حدث خطأ');
+  }
+
+  alert(statusValue==='approved'
+    ? 'تم قبول الإيداع وإضافة الرصيد.'
+    : 'تم رفض الإيداع.'
+  );
+
+  load();
+ } } load(){let [p,o,s]=await Promise.all([A('/api/admin/products').then(x=>x.json()),A('/api/admin/orders').then(x=>x.json()),A('/api/admin/stats').then(x=>x.json())]);pc.textContent=s.products;oc.textContent=s.orders;sc.textContent='$'+Number(s.sales).toFixed(2);pt.innerHTML=p.map(x=>`<tr><td>${x.name}</td><td>${x.game}</td><td>$${Number(x.price).toFixed(2)}</td><td>${x.stock}</td><td><button class="btn" onclick="del(${x.id})">حذف</button></td></tr>`).join('');ot.innerHTML=o.map(x=>`<tr><td>#SO-${x.id}</td><td>${x.customer_name}<br><small>${x.contact}</small></td><td>${x.player_id}</td><td>${x.product_name}</td><td>$${Number(x.price).toFixed(2)}</td><td><select onchange="status(${x.id},this.value)" style="background:#0b0f18;color:#fff;border:1px solid #293149;padding:6px"><option value="new" ${x.status==='new'?'selected':''}>جديد</option><option value="processing" ${x.status==='processing'?'selected':''}>قيد التنفيذ</option><option value="done" ${x.status==='done'?'selected':''}>مكتمل</option></select></td></tr>`).join('')}
 form.onsubmit=async e=>{e.preventDefault();let fd=new FormData(form);await A('/api/admin/products',{method:'POST',body:fd});form.reset();closeM();load()};async function del(id){if(confirm('حذف المنتج؟')){await A('/api/admin/products/'+id,{method:'DELETE'});load()}}async function status(id,v){await A('/api/admin/orders/'+id,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({status:v})})}load();
 </script></body></html>
